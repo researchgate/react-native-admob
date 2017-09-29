@@ -64,7 +64,7 @@ Under `protected List<ReactPackage> getPackages() {`:
 
 ## Usage
 
-```javascript
+```jsx
 import {
   AdMobBanner,
   AdMobInterstitial,
