@@ -55,9 +55,11 @@ class PublisherBanner extends Component {
   }
 
   render() {
-    return (
+    const { render, ...props } = this.props
+
+    const el = (
       <RNDFPBannerView
-        {...this.props}
+        {...props}
         style={[this.props.style, this.state.style]}
         onSizeChange={this.handleSizeChange}
         onAdFailedToLoad={this.handleAdFailedToLoad}
@@ -65,6 +67,10 @@ class PublisherBanner extends Component {
         ref={el => (this._bannerView = el)}
       />
     );
+
+    return render
+      ? render(el)
+      : el;
   }
 }
 
@@ -114,6 +120,8 @@ PublisherBanner.propTypes = {
   onAdClosed: func,
   onAdLeftApplication: func,
   onAppEvent: func,
+
+  render: func,
 
   targeting: shape({
     /**
