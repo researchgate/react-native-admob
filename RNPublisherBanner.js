@@ -27,15 +27,21 @@ class PublisherBanner extends Component {
     this.state = {
       style: {},
     };
+    this._bannerViewPromise = new Promise(resolve => this._onBannerViewRef = resolve);
+    this.loadBanner = this.loadBanner.bind(this);
   }
 
   componentDidMount() {
-    this.loadBanner();
+    if (!this.props.render) {
+        this.loadBanner();
+    }
   }
 
-  loadBanner() {
+  async loadBanner() {
+    const bannerView = await this._bannerViewPromise;
+
     UIManager.dispatchViewManagerCommand(
-      findNodeHandle(this._bannerView),
+      findNodeHandle(bannerView),
       UIManager.getViewManagerConfig('RNDFPBannerView').Commands.loadBanner,
       null
     );
@@ -74,12 +80,12 @@ class PublisherBanner extends Component {
         onSizeChange={this.handleSizeChange}
         onAdFailedToLoad={this.handleAdFailedToLoad}
         onAppEvent={this.handleAppEvent}
-        ref={(el) => (this._bannerView = el)}
+        ref={this._onBannerViewRef}
       />
     );
 
     return render
-      ? render(el)
+      ? render(el, this.loadBanner)
       : el;
   }
 }
